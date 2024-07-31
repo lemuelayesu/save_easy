@@ -1,16 +1,16 @@
 # save_easy
+! The news section has only financial news, emphasis on finanfial literacy from the big dogs.
 
-A new Flutter project.
+! So for the savings, this is the idea: 
+    so two types of savings right, time bound and fixed goal bound. So by default, there are 3 months and 6 months and 1 year savings goals. The user can start savings on it and will only have access to it when time is up
 
-## Getting Started
+    But for the money bound, you  set a money goal and until you reach it, you get access to it.
 
-This project is a starting point for a Flutter application.
+    How will it be coded?, I have no idea. 
 
-A few resources to get you started if this is your first Flutter project:
+    So the user can actually cash out before time but when they do, they loose money, which should be stated for the user to know before they start the account. 
+    -like terms of service or something. 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+    The user should be able to move money from one savings into another, but I'm not to sure on that one. 
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    
