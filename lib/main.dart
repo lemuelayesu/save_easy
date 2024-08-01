@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:save_easy/consts/theme.dart';
-import 'package:save_easy/screens/onboarding.dart';
+//import 'package:save_easy/screens/onboarding.dart';
+import 'package:save_easy/screens/savings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData(),
-      home: const Onboarding(),
+      home: const Savings(),
     );
   }
 }

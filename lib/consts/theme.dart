@@ -5,6 +5,9 @@ ThemeData themeData() {
   return ThemeData(
     scaffoldBackgroundColor: const Color.fromRGBO(243, 243, 243, 1),
     textTheme: GoogleFonts.plusJakartaSansTextTheme(),
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Color.fromRGBO(243, 243, 243, 1),
+    ),
     colorScheme: ThemeData().colorScheme.copyWith(
           primary: const Color.fromRGBO(55, 124, 200, 1),
           onPrimary: const Color.fromRGBO(70, 155, 136, 1),
