@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:save_easy/consts/onboardingContent_Module.dart';
-import 'package:save_easy/screens/signUp.dart';
+import 'package:save_easy/consts/onboarding_content_module.dart';
+import 'package:save_easy/screens/sign_up.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
