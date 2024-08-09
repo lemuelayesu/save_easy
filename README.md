@@ -13,3 +13,7 @@ So the user can actually cash out before time but when they do, they loose money
 
 The user should be able to move money from one savings into another, but I'm not to sure on that one. 
 
+ALso the users need to choose for notifications that remind them to save, they can pick weekly or monthly or daily, by default it's daily. 
+
+Let's automate some part of the app too, if you know you can save consistently every month then at the bigging of every month you get the notifacation to save. 
+And let's add a credit card option, if the user want's to , they can sign up to be deducted a fixed amount into a specific account every couple of days or weeks or month.
