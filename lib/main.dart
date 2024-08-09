@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:save_easy/consts/theme.dart';
-//import 'package:save_easy/screens/onboarding.dart';
 import 'package:save_easy/screens/savings.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+Future<void> main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "831204442337",
+    "project_id": "save-easy2074",
+    "storage_bucket": "save-easy2074.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:831204442337:android:1590c33b05dae02bbff7a0",
+        "android_client_info": {
+          "package_name": "com.example.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwOwL8PQo7O5xs8LiSlam6FHUBkOe1-Ms"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
