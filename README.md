@@ -1,5 +1,5 @@
 # save_easy
-! The news section has only financial news, emphasis on finanfial literacy from the big dogs.
+! The news section has only financial news, emphasis on financial literacy from the big dogs.
 
 ! So for the savings, this is the idea: 
 so two types of savings right, time bound and fixed goal bound. So by default, there are 3 months and 6 months and 1 year savings goals. The user can start savings on it and will only have access to it when time is up
