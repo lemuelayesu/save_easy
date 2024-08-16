@@ -14,8 +14,10 @@ class _SavingsState extends State<Savings> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          //check this error out for me
+          //As ause pop no eno dey work, edey give black screen
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.maybePop(context);
           },
           icon: Icon(
             Icons.arrow_back_ios,

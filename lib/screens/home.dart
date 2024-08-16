@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:save_easy/screens/savings.dart';
 
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
@@ -94,34 +95,46 @@ class Homepage extends StatelessWidget {
                           const SizedBox(
                             height: 5,
                           ),
-                          SizedBox(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'My savings',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w300,
-                                    color: color.surface,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return const Savings();
+                                  },
+                                ),
+                              );
+                            },
+                            child: SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    'My savings',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w300,
+                                      color: color.surface,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  width: 6,
-                                ),
-                                GestureDetector(
-                                  child: CircleAvatar(
-                                    backgroundColor: color.surface,
-                                    radius: 16,
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.arrow_forward_outlined,
-                                        size: 20,
+                                  const SizedBox(
+                                    width: 6,
+                                  ),
+                                  GestureDetector(
+                                    child: CircleAvatar(
+                                      backgroundColor: color.surface,
+                                      radius: 16,
+                                      child: const Center(
+                                        child: Icon(
+                                          Icons.arrow_forward_outlined,
+                                          size: 20,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -173,36 +186,48 @@ class Homepage extends StatelessWidget {
                   //Big plus sign to save
                   //After clicking on there, users can pickk a plan or create a new one and upload money to it.
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 13, vertical: 16),
-                      width: double.infinity,
-                      height: 66,
-                      decoration: BoxDecoration(
-                        color: const Color.fromRGBO(36, 36, 36, 20),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: null,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Save Now',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500,
-                                  color: color.surface,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const Savings();
+                            },
+                          ),
+                        );
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 13, vertical: 16),
+                        width: double.infinity,
+                        height: 66,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(36, 36, 36, 20),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: GestureDetector(
+                            onTap: null,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Save Now',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: color.surface,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              Icon(
-                                Iconsax.add,
-                                color: color.secondary,
-                                size: 30,
-                              ),
-                            ],
+                                const SizedBox(width: 5),
+                                Icon(
+                                  Iconsax.add,
+                                  color: color.secondary,
+                                  size: 30,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_easy/consts/theme.dart';
-import 'package:save_easy/screens/savings.dart';
+import 'package:save_easy/screens/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: themeData(),
-      home: const Savings(),
+      home: const Onboarding(),
     );
   }
 }
