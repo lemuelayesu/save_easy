@@ -1,7 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:save_easy/models/user.dart';
 import 'package:save_easy/screens/home.dart';
 import 'package:save_easy/screens/log_in.dart';
+import 'package:save_easy/services/auth_service.dart';
+import 'package:uuid/uuid.dart';
+
+import '../consts/snackbar.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -11,6 +18,13 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmController = TextEditingController();
+  bool isPressed = false;
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
@@ -57,6 +71,7 @@ class _SignupState extends State<Signup> {
                           ),
                         ),
                       ),
+                      controller: nameController,
                     ),
                     const SizedBox(
                       width: 10,
@@ -66,6 +81,7 @@ class _SignupState extends State<Signup> {
                     ),
                     TextFormField(
                       expands: false,
+                      controller: emailController,
                       decoration: const InputDecoration(
                         labelText: "E-Mail",
                         prefixIcon: Icon(Iconsax.direct),
@@ -81,6 +97,7 @@ class _SignupState extends State<Signup> {
                     ),
                     TextFormField(
                       expands: false,
+                      controller: phoneController,
                       decoration: const InputDecoration(
                         labelText: "Phone Number",
                         prefixIcon: Icon(Iconsax.call),
@@ -96,6 +113,7 @@ class _SignupState extends State<Signup> {
                     ),
                     TextFormField(
                       expands: false,
+                      controller: passwordController,
                       decoration: const InputDecoration(
                         labelText: "Password",
                         prefixIcon: Icon(Iconsax.key),
@@ -115,6 +133,7 @@ class _SignupState extends State<Signup> {
                     ),
                     TextFormField(
                       expands: false,
+                      controller: confirmController,
                       decoration: const InputDecoration(
                         labelText: "Confirm Password",
                         prefixIcon: Icon(Iconsax.key),
@@ -146,15 +165,43 @@ class _SignupState extends State<Signup> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const Homepage();
-                              },
-                            ),
-                          );
+                        onPressed: () async {
+                          try {
+                            setState(() {
+                              isPressed = true;
+                            });
+
+                            String name = nameController.text;
+                            String email = emailController.text;
+                            String number = phoneController.text;
+                            String password = passwordController.text;
+
+                            User user = User(
+                              fullName: name,
+                              email: email,
+                              phoneNumber: number,
+                              uid: const Uuid().v4(),
+                            );
+
+                            await AuthService.signUp(user, password, context);
+                            showCustomSnackbar('Signed Up', context);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const Homepage();
+                                },
+                              ),
+                            );
+
+                            setState(() {
+                              isPressed = false;
+                            });
+                          } catch (error) {
+                            log('$error');
+                            showCustomSnackbar('Error: $error', context);
+                          }
                         },
                         child: Text(
                           "Create Account",
@@ -181,7 +228,13 @@ class _SignupState extends State<Signup> {
                               ),
                             );
                           },
-                          child: const Text('Login'),
+                          child: isPressed
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: color.surface,
+                                  ),
+                                )
+                              : const Text('Login'),
                         ),
                       ],
                     ),
