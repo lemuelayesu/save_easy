@@ -24,6 +24,7 @@ class _SignupState extends State<Signup> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmController = TextEditingController();
   bool isPressed = false;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +60,7 @@ class _SignupState extends State<Signup> {
                 height: 20,
               ),
               Form(
+                key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -167,6 +169,8 @@ class _SignupState extends State<Signup> {
                         ),
                         onPressed: () async {
                           try {
+                            if(formKey.currentState!.validate()){}
+
                             setState(() {
                               isPressed = true;
                             });

@@ -18,6 +18,7 @@ class _LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPressed = false;
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,7 @@ class _LoginState extends State<Login> {
                 height: 20,
               ),
               Form(
+                key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -111,6 +113,8 @@ class _LoginState extends State<Login> {
                         ),
                         onPressed: () async {
                           try {
+                            if(formKey.currentState!.validate()){}
+
                             setState(() {
                               isPressed = true;
                             });

@@ -16,7 +16,7 @@ class UserProvider with ChangeNotifier {
     try{
       final userSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .where('email', isEqualTo: email)
+          .where('email'.toLowerCase(), isEqualTo: email)
           .get();
 
       final userDoc = userSnapshot.docs.first;
