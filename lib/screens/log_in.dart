@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/screens/sign_up.dart';
+import 'package:save_easy/services/auth_service.dart';
 import 'home.dart';
 
 class Login extends StatefulWidget {
@@ -11,6 +15,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isPressed = false;
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
@@ -45,6 +54,7 @@ class _LoginState extends State<Login> {
                 height: 20,
               ),
               Form(
+                key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -57,6 +67,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
+                      controller: emailController,
                     ),
                     const SizedBox(
                       height: 20,
@@ -75,6 +86,7 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
+                      controller: passwordController,
                     ),
                     Align(
                       alignment: Alignment.centerRight,
@@ -99,24 +111,49 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return const Homepage();
-                              },
-                            ),
-                          );
+                        onPressed: () async {
+                          try {
+                            if(formKey.currentState!.validate()){}
+
+                            setState(() {
+                              isPressed = true;
+                            });
+                            String email = emailController.text;
+                            String password = passwordController.text;
+
+                            await AuthService.signIn(email, password, context);
+                            showCustomSnackbar('Signed In', context);
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const Homepage();
+                                },
+                              ),
+                            );
+                            setState(() {
+                              isPressed = false;
+                            });
+                          } catch (error) {
+                            log('$error');
+                            showCustomSnackbar('Error: $error', context);
+                          }
                         },
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            color: color.surface,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
+                        child: isPressed
+                            ? Center(
+                                child: CircularProgressIndicator(
+                                  color: color.surface,
+                                ),
+                              )
+                            : Text(
+                                "Login",
+                                style: TextStyle(
+                                  color: color.surface,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
                       ),
                     ),
                     const SizedBox(
