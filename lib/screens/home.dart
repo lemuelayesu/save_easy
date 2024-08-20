@@ -111,7 +111,7 @@ class Homepage extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                "\$25,000.40",
+                                "₵25,000.40",
                                 style: TextStyle(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
@@ -210,7 +210,7 @@ class Homepage extends StatelessWidget {
                     Stack(
                       //for this button
                       //Big plus sign to save
-                      //After clicking on there, users can pickk a plan or create a new one and upload money to it.
+                      //After clicking on there, users can pick a plan or create a new one and upload money to it.
                       children: [
                         GestureDetector(
                           onTap: () {
@@ -309,25 +309,25 @@ class Homepage extends StatelessWidget {
                         SavingSection(
                           progressColor: color.secondary,
                           itemLable: 'Iphone 13 Mini',
-                          priceLable: '\$699',
+                          priceLable: '₵699',
                           progressValue: 0.5,
                         ),
                         //const SizedBOx
                         SavingSection(
                           itemLable: 'Macbook Pro M1',
-                          priceLable: '\$1,499',
+                          priceLable: '₵1,499',
                           progressValue: 0.6,
                           progressColor: color.secondaryFixed,
                         ),
                         SavingSection(
                           itemLable: 'Car',
-                          priceLable: '\$20,000',
+                          priceLable: '₵20,000',
                           progressValue: 0.3,
                           progressColor: color.primaryFixed,
                         ),
                         SavingSection(
                           itemLable: 'House',
-                          priceLable: '\$30,500',
+                          priceLable: '₵30,500',
                           progressValue: 0.55,
                           progressColor: color.primary,
                         ),
@@ -335,9 +335,61 @@ class Homepage extends StatelessWidget {
                     ),
                   ],
                 ),
+                //News section
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Fiancial News',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: color.onSurface,
+                      ),
+                    ),
+                    const TextButton(
+                      onPressed: null,
+                      child: Text(
+                        'See All',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      child: Container(
+                        height: 100.0,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: color.surface,
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 110,
+                              height: 100,
+                              child: Image.asset(
+                                'assets/pictures/gatetomars.jpeg',
+                                fit: BoxFit.fitHeight,
+                              ),
+                            ),
 
-                //Transactions
-                //News/anything that comes up
+                            //Column(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           );

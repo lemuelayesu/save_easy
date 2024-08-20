@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:save_easy/consts/onboarding_content_module.dart';
+import 'package:save_easy/screens/log_in.dart';
 import 'package:save_easy/screens/sign_up.dart';
 
 class Onboarding extends StatefulWidget {
@@ -143,8 +144,25 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          const SizedBox(
-            height: 50,
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const Login();
+                  },
+                ),
+              );
+            },
+            child: Text(
+              'skip',
+              style: TextStyle(
+                color: color.primary,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
         ],
       ),
