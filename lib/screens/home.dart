@@ -382,6 +382,25 @@ class Homepage extends StatelessWidget {
                                 fit: BoxFit.fitHeight,
                               ),
                             ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'This is the time to invest in a space Company as the race to the moon becomes firce',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
+                                        color: color.onSurface,
+                                      ),
+                                      overflow: TextOverflow.visible,
+                                      softWrap: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
 
                             //Column(),
                           ],
