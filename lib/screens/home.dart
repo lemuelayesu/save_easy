@@ -5,6 +5,7 @@ import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
 import 'package:save_easy/screens/savings.dart';
+import 'package:save_easy/financial_news.dart';
 
 import '../providers/user_provider.dart';
 
@@ -36,7 +37,7 @@ class Homepage extends StatelessWidget {
                 uid: 'uid',
               );
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: ListView(
               children: [
                 Row(
@@ -98,6 +99,15 @@ class Homepage extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(36, 36, 36, 20),
                             borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.9),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: const Offset(
+                                    0, 1), // changes position of shadow
+                              ),
+                            ],
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -335,6 +345,7 @@ class Homepage extends StatelessWidget {
                     ),
                   ],
                 ),
+
                 //News section
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -360,54 +371,20 @@ class Homepage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      child: Container(
-                        height: 100.0,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: color.surface,
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 110,
-                              height: 100,
-                              child: Image.asset(
-                                'assets/pictures/gatetomars.jpeg',
-                                fit: BoxFit.fitHeight,
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      'This is the time to invest in a space Company as the race to the moon becomes firce',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                        color: color.onSurface,
-                                      ),
-                                      overflow: TextOverflow.visible,
-                                      softWrap: true,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            //Column(),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                const SizedBox(
+                  height: 5,
+                ),
+                const NewsTile(
+                  headlineImage: 'assets/pictures/gatetomars.jpeg',
+                  headlineText:
+                      'This is the time to invest in a space Company as the race to the moon becomes firce',
+                  newsSource: 'The news Times',
+                ),
+                const NewsTile(
+                  headlineImage: 'assets/pictures/saveeasy.png',
+                  headlineText:
+                      'The launch of a new micro-savings platform goes viral. People say it is just what they are looking for.',
+                  newsSource: 'The Easy Times',
                 ),
               ],
             ),
@@ -442,6 +419,14 @@ class SavingSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: color.surface,
         borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1), // changes position of shadow
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
