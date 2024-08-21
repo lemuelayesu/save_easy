@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:save_easy/models/user.dart';
@@ -169,7 +168,7 @@ class _SignupState extends State<Signup> {
                         ),
                         onPressed: () async {
                           try {
-                            if(formKey.currentState!.validate()){}
+                            if (formKey.currentState!.validate()) {}
 
                             setState(() {
                               isPressed = true;

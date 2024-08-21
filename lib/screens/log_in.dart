@@ -19,6 +19,7 @@ class _LoginState extends State<Login> {
   final TextEditingController passwordController = TextEditingController();
   bool isPressed = false;
   final formKey = GlobalKey<FormState>();
+  bool _isObscured = true;
 
   @override
   Widget build(BuildContext context) {
@@ -73,14 +74,21 @@ class _LoginState extends State<Login> {
                       height: 20,
                     ),
                     TextFormField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: "Password",
-                        prefixIcon: Icon(Iconsax.key),
+                        prefixIcon: const Icon(Iconsax.key),
                         suffixIcon: IconButton(
-                          onPressed: null,
-                          icon: Icon(Iconsax.eye_slash),
+                          icon: _isObscured
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off_outlined),
+                          onPressed: () {
+                            setState(() {
+                              _isObscured != _isObscured;
+                            });
+                          },
+                          //Icon: Icon(Icons.visibility_off_outlined),
                         ),
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
                             Radius.circular(8),
                           ),
@@ -113,7 +121,7 @@ class _LoginState extends State<Login> {
                         ),
                         onPressed: () async {
                           try {
-                            if(formKey.currentState!.validate()){}
+                            if (formKey.currentState!.validate()) {}
 
                             setState(() {
                               isPressed = true;
