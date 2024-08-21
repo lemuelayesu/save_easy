@@ -17,3 +17,6 @@ ALso the users need to choose for notifications that remind them to save, they c
 
 Let's automate some part of the app too, if you know you can save consistently every month then at the bigging of every month you get the notifacation to save. 
 And let's add a credit card option, if the user want's to , they can sign up to be deducted a fixed amount into a specific account every couple of days or weeks or month.
+
+##update
+Let's keep the savings section at a fair height by default so that even if there's no savings plan, it takes up some small space.

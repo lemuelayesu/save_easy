@@ -37,7 +37,7 @@ class Homepage extends StatelessWidget {
                 uid: 'uid',
               );
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
             child: ListView(
               children: [
                 Row(
@@ -294,9 +294,18 @@ class Homepage extends StatelessWidget {
                         color: color.onSurface,
                       ),
                     ),
-                    const TextButton(
-                      onPressed: null,
-                      child: Text(
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return const Savings();
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text(
                         'See All',
                         style: TextStyle(
                           fontSize: 14,

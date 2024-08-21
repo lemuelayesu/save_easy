@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:save_easy/screens/home.dart';
+import 'package:save_easy/screens/set_savings_goal.dart';
 
 class Savings extends StatefulWidget {
   const Savings({super.key});
@@ -14,10 +16,16 @@ class _SavingsState extends State<Savings> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          //check this error out for me
-          //As ause pop no eno dey work, edey give black screen
           onPressed: () {
-            Navigator.maybePop(context);
+            //Idk if this navigation code is right
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
           },
           icon: Icon(
             Icons.arrow_back_ios,
@@ -26,14 +34,43 @@ class _SavingsState extends State<Savings> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: null,
-            icon: Icon(
+          ElevatedButton(
+            style: ButtonStyle(
+              shape: WidgetStateProperty.all(const StadiumBorder()),
+              backgroundColor: WidgetStateProperty.all(
+                color.primary,
+              ),
+            ),
+            //supposed to take you to a screen that is scroable but you can still see the Savings screen behind
+            onPressed: () {
+              showModalBottomSheet(
+                constraints: const BoxConstraints(
+                    minWidth: double.infinity, maxWidth: double.infinity),
+                context: context,
+                isScrollControlled:
+                    true, // Allow the sheet to expand to full height
+
+                shape: const RoundedRectangleBorder(
+                  // Optional: Customize sheet shape
+
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(20.0),
+                  ),
+                ),
+                builder: (context) {
+                  return const SetSavingsGoal();
+                },
+              );
+            },
+            child: Icon(
               Icons.add,
-              color: color.onSurface,
+              color: color.surface,
               size: 27,
             ),
           ),
+          const SizedBox(
+            width: 15,
+          )
         ],
         centerTitle: true,
         title: Text(
