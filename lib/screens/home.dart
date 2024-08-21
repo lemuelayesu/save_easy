@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
-import 'package:save_easy/screens/savings.dart';
+import 'package:save_easy/screens/savings_page.dart';
 import 'package:save_easy/financial_news.dart';
-
+import 'package:save_easy/savings_section.dart';
 import '../providers/user_provider.dart';
 
 class Homepage extends StatelessWidget {
@@ -392,83 +392,5 @@ class Homepage extends StatelessWidget {
         }
       },
     ));
-  }
-}
-
-class SavingSection extends StatelessWidget {
-  const SavingSection({
-    super.key,
-    required this.itemLable,
-    required this.priceLable,
-    required this.progressValue,
-    required this.progressColor,
-  });
-
-  final Color progressColor;
-  final String itemLable;
-  final String priceLable;
-  final double progressValue;
-
-  @override
-  Widget build(BuildContext context) {
-    final ColorScheme color = Theme.of(context).colorScheme;
-    return Container(
-      width: 156,
-      height: 91,
-      padding: const EdgeInsetsDirectional.all(10),
-      decoration: BoxDecoration(
-        color: color.surface,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 2,
-            offset: const Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                itemLable,
-                style: TextStyle(
-                  color: color.tertiary,
-                  fontSize: 13,
-                ),
-              ),
-              const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 16,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(
-            priceLable,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          LinearProgressIndicator(
-            value: progressValue,
-            backgroundColor: color.surfaceDim,
-            minHeight: 8,
-            color: progressColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ],
-      ),
-    );
   }
 }
