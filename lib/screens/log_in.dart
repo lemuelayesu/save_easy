@@ -74,6 +74,7 @@ class _LoginState extends State<Login> {
                       height: 20,
                     ),
                     TextFormField(
+                      obscureText: _isObscured,
                       decoration: InputDecoration(
                         labelText: "Password",
                         prefixIcon: const Icon(Iconsax.key),
@@ -83,7 +84,7 @@ class _LoginState extends State<Login> {
                               : const Icon(Icons.visibility_off_outlined),
                           onPressed: () {
                             setState(() {
-                              _isObscured != _isObscured;
+                              _isObscured = !_isObscured;
                             });
                           },
                           //Icon: Icon(Icons.visibility_off_outlined),
