@@ -97,12 +97,9 @@ class _OnboardingState extends State<Onboarding> {
               (index) => buildDot(index, context),
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: SizedBox(
                 height: 54,
                 width: double.infinity,
@@ -144,23 +141,37 @@ class _OnboardingState extends State<Onboarding> {
               ),
             ),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    return const Login();
-                  },
+          Padding(
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              height: 54,
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: color.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  elevation: 0,
                 ),
-              );
-            },
-            child: Text(
-              'skip',
-              style: TextStyle(
-                color: color.primary,
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const Login();
+                      },
+                    ),
+                  );
+                },
+                child: Text(
+                  'Skip',
+                  style: TextStyle(
+                    color: color.primary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
           ),
