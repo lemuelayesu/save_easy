@@ -9,7 +9,7 @@ void showCustomSnackbar(String message, BuildContext context) {
           color: Colors.white,
         ),
       ),
-      duration: const Duration(seconds: 5),
+      duration: const Duration(seconds: 2),
       backgroundColor: Colors.black,
     ),
   );

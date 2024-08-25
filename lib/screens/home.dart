@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
+import 'package:save_easy/screens/profile.dart';
 import 'package:save_easy/screens/savings_page.dart';
 import 'package:save_easy/financial_news.dart';
 import 'package:save_easy/savings_section.dart';
@@ -45,12 +46,27 @@ class Homepage extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        ClipOval(
-                          child: SizedBox(
-                            width: 31.56,
-                            height: 32,
-                            child: Image.asset(
-                                'assets/illustrations/circleavatar.png'),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return const UserProfile();
+                                },
+                              ),
+                            );
+                          },
+                          child: CircleAvatar(
+                            radius: 22,
+                            child: ClipOval(
+                              child: SizedBox(
+                                width: 31.56,
+                                height: 32,
+                                child: Image.asset(
+                                    'assets/illustrations/circleavatar.png'),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(

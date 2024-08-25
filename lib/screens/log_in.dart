@@ -87,7 +87,6 @@ class _LoginState extends State<Login> {
                               _isObscured = !_isObscured;
                             });
                           },
-                          //Icon: Icon(Icons.visibility_off_outlined),
                         ),
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(
