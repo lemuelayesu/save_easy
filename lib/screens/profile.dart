@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -13,6 +14,24 @@ class _UserProfileState extends State<UserProfile> {
     final ColorScheme color = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            //Idk if this navigation code is right
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: color.onSurface,
+            size: 20,
+          ),
+        ),
         centerTitle: true,
         title: const Text(
           'My Profile',
