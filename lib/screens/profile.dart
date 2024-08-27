@@ -118,7 +118,9 @@ class _UserProfileState extends State<UserProfile> {
                       'Logout',
                       style: TextStyle(color: color.onSurface),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      //onTap, logout
+                    },
                   ),
                 ],
               ),
