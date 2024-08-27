@@ -163,7 +163,7 @@ class Homepage extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        'My savings',
+                                        'Details',
                                         style: TextStyle(
                                           fontSize: 13,
                                           fontWeight: FontWeight.w300,
