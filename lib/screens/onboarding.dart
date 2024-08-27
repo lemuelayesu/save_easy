@@ -49,7 +49,7 @@ class _OnboardingState extends State<Onboarding> {
                     const Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: Text(
-                        'save/easy:',
+                        'save easy',
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
