@@ -98,7 +98,7 @@ class _SavingsState extends State<Savings> {
               percentageProgressIndicator: 0.0,
               daysLeft: '30 days left',
               cardTextColor: color.onSurface,
-              isTimeUp: false,
+              isTimeUp: false, // Set to true if time is up
             ),
             const SizedBox(
               height: 10,
@@ -137,13 +137,13 @@ class _SavingsState extends State<Savings> {
               height: 10,
             ),
             SetTimeSavingsGoalCard(
-              cardColor: color.primary,
+              cardColor: color.primary, // Using color from theme
               setTimeGoal: '6 Months',
               currentAmount: '₵2,000',
               percentageProgressIndicator: 0.4,
               daysLeft: '180 days left',
               cardTextColor: color.onSurface,
-              isTimeUp: false,
+              isTimeUp: false, // Set to true if time is up
             ),
           ],
         ),
@@ -179,9 +179,8 @@ class CustomSavingsGoalCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.only(
-              left: 13, right: 13, top: 16, bottom: 30), // Corrected padding
-          height: 176,
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+          height: showCashout ? 190 : 176, // Adjusted height
           width: double.infinity,
           decoration: BoxDecoration(
             color: cardColor,
@@ -247,39 +246,43 @@ class CustomSavingsGoalCard extends StatelessWidget {
                           color: cardTextColor,
                         ),
                       ),
-                      // Conditional button display
-                      if (showCashout)
-                        ElevatedButton(
-                          onPressed: () {
-                            // Call Cashout Bottom Sheet
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20.0),
+                      // Conditional button display (CORRECTED)
+                      if (showCashout) // Condition now controls the entire Container
+                        Container(
+                          margin: const EdgeInsetsDirectional.only(end: 30),
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Call Cashout Bottom Sheet
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20.0),
+                                  ),
                                 ),
+                                builder: (context) {
+                                  return CashoutBottomSheet(
+                                    amount: targetAmount,
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: color.surface,
+                              shape: const StadiumBorder(),
+                            ),
+                            child: Text(
+                              'Cashout',
+                              style: TextStyle(
+                                color: color.onSurface,
+                                fontWeight: FontWeight.bold,
                               ),
-                              builder: (context) {
-                                return CashoutBottomSheet(
-                                  amount: targetAmount,
-                                );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: color.surface,
-                            shape: const StadiumBorder(),
-                          ),
-                          child: Text(
-                            'Cashout',
-                            style: TextStyle(
-                              color: color.onSurface,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         )
-                      else
+                      else // Add button Container
                         Container(
                           margin: const EdgeInsetsDirectional.only(end: 30),
                           alignment: Alignment.bottomRight,
@@ -294,7 +297,17 @@ class CustomSavingsGoalCard extends StatelessWidget {
                                   ),
                                 ),
                                 builder: (context) {
-                                  return const AddSavingsBottomSheet();
+                                  return AddSavingsBottomSheet(
+                                    // Pass the current amount to the bottom sheet
+                                    currentAmount: double.tryParse(currentAmount
+                                            .replaceAll('₵', '')) ??
+                                        0.0,
+                                    // Pass a callback to update the current amount
+                                    onSave: (double newAmount) {
+                                      // TODO: Update the current amount of the savings goal.
+                                      // This is where you'll likely need to use state management to update the widget.
+                                    },
+                                  );
                                 },
                               );
                             },
@@ -362,9 +375,8 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          padding: const EdgeInsets.only(
-              left: 13, right: 13, top: 16, bottom: 30), // Corrected padding
-          height: 176,
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+          height: showCashout ? 190 : 176, // Adjusted height
           width: double.infinity,
           decoration: BoxDecoration(
             color: cardColor,
@@ -433,39 +445,43 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                           color: cardTextColor,
                         ),
                       ),
-                      // Conditional button display
-                      if (showCashout)
-                        ElevatedButton(
-                          onPressed: () {
-                            // Call Cashout Bottom Sheet
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20.0),
+                      // Conditional button display (CORRECTED)
+                      if (showCashout) // Condition controls the entire Container
+                        Container(
+                          margin: const EdgeInsetsDirectional.only(end: 30),
+                          alignment: Alignment.bottomRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              // Call Cashout Bottom Sheet
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20.0),
+                                  ),
                                 ),
+                                builder: (context) {
+                                  return CashoutBottomSheet(
+                                    amount: currentAmount,
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: color.surface,
+                              shape: const StadiumBorder(),
+                            ),
+                            child: Text(
+                              'Cashout',
+                              style: TextStyle(
+                                color: color.onSurface,
+                                fontWeight: FontWeight.bold,
                               ),
-                              builder: (context) {
-                                return CashoutBottomSheet(
-                                  amount: currentAmount,
-                                );
-                              },
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: color.surface,
-                            shape: const StadiumBorder(),
-                          ),
-                          child: Text(
-                            'Cashout',
-                            style: TextStyle(
-                              color: color.onSurface, // Black text
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         )
-                      else
+                      else // Add button Container
                         Container(
                           margin: const EdgeInsetsDirectional.only(end: 30),
                           alignment: Alignment.bottomRight,
@@ -480,7 +496,17 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                                   ),
                                 ),
                                 builder: (context) {
-                                  return const AddSavingsBottomSheet();
+                                  return AddSavingsBottomSheet(
+                                    // Pass the current amount to the bottom sheet
+                                    currentAmount: double.tryParse(currentAmount
+                                            .replaceAll('₵', '')) ??
+                                        0.0,
+                                    // Pass a callback to update the current amount
+                                    onSave: (double newAmount) {
+                                      // TODO: Update the current amount of the savings goal.
+                                      // This is where you'll likely need to use state management to update the widget.
+                                    },
+                                  );
                                 },
                               );
                             },
@@ -498,9 +524,7 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                         ),
                     ],
                   ),
-                  const SizedBox(
-                    height: 7,
-                  ),
+                  // SizedBox removed to maintain original spacing
                 ],
               ),
               Align(
@@ -519,8 +543,14 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
   }
 }
 
+// AddSavingsBottomSheet Widget
 class AddSavingsBottomSheet extends StatefulWidget {
-  const AddSavingsBottomSheet({super.key});
+  final double currentAmount; // Current savings amount
+  final Function(double) onSave; // Callback to update savings
+
+  const AddSavingsBottomSheet(
+      {Key? key, required this.currentAmount, required this.onSave})
+      : super(key: key);
 
   @override
   State<AddSavingsBottomSheet> createState() => _AddSavingsBottomSheetState();
@@ -551,7 +581,8 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
             const SizedBox(height: 16),
             TextField(
               controller: _amountController,
-              keyboardType: TextInputType.number,
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 hintText: 'Enter amount',
                 border: OutlineInputBorder(
@@ -566,7 +597,17 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
                 backgroundColor: MaterialStateProperty.all(color.primary),
               ),
               onPressed: () {
-                Navigator.pop(context); // Close the bottom sheet
+                // Validate and save the amount
+                double amountToAdd =
+                    double.tryParse(_amountController.text) ?? 0.0;
+                if (amountToAdd > 0) {
+                  widget.onSave(widget.currentAmount + amountToAdd);
+                  Navigator.pop(context);
+                } else {
+                  // Show an error message or snackbar
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Please enter a valid amount')));
+                }
               },
               child: Text(
                 'Save',
@@ -586,7 +627,6 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
 
   @override
   void dispose() {
-    // Dispose the controller when the widget is disposed
     _amountController.dispose();
     super.dispose();
   }
@@ -594,7 +634,6 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
 
 // CashoutBottomSheet Widget
 class CashoutBottomSheet extends StatefulWidget {
-  // Add amount property
   final String amount;
 
   const CashoutBottomSheet({Key? key, required this.amount}) : super(key: key);
@@ -611,7 +650,6 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
   @override
   void initState() {
     super.initState();
-    // Prefill amount
     _amountController.text = widget.amount;
   }
 
@@ -627,7 +665,7 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              'Cashout', // Bottom Sheet Title
+              'Cashout',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -635,7 +673,6 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            // Phone Number Field
             TextField(
               controller: _phoneNumberController,
               keyboardType: TextInputType.phone,
@@ -647,11 +684,10 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            // Amount Field (Prefilled and Disabled)
             TextField(
               controller: _amountController,
               keyboardType: TextInputType.number,
-              enabled: false, // Disable editing
+              enabled: false,
               decoration: InputDecoration(
                 hintText: 'Enter amount',
                 border: OutlineInputBorder(
@@ -660,7 +696,6 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
               ),
             ),
             const SizedBox(height: 16),
-            // Reference Field
             TextField(
               controller: _referenceController,
               decoration: InputDecoration(
@@ -671,7 +706,6 @@ class _CashoutBottomSheetState extends State<CashoutBottomSheet> {
               ),
             ),
             const SizedBox(height: 24),
-            // Cashout Button
             ElevatedButton(
               style: ButtonStyle(
                 shape: MaterialStateProperty.all(const StadiumBorder()),
