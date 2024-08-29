@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:save_easy/models/transaction.dart' as t;
 import 'package:save_easy/models/user.dart';
 import 'package:save_easy/screens/home.dart';
-import 'package:save_easy/screens/payment_webview.dart';
 import 'package:save_easy/widgets/set_savings_goal.dart';
-import 'package:uuid/uuid.dart';
 
 class Savings extends StatefulWidget {
   const Savings({super.key, required this.user});
-
   final User user;
-
   @override
   State<Savings> createState() => _SavingsState();
 }
@@ -95,11 +90,10 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.secondary,
               itemLabel: 'Iphone 13 Mini',
-              savingsProgressIndicator: '\$300 of \$699',
+              savingsProgressIndicator: '₵300 of ₵699',
               percentageProgressIndicator: 0.5,
-              daysLeft: "14 days left",
+              //daysLeft: "14 days left",
               cardTextColor: color.surface,
-              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -107,11 +101,10 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.secondaryFixed,
               itemLabel: "Macbook Pro M1",
-              savingsProgressIndicator: "\$300 of \$1,499",
+              savingsProgressIndicator: "₵300 of ₵1,499",
               percentageProgressIndicator: 0.3,
-              daysLeft: "14 days left",
+              //daysLeft: "14 days left",
               cardTextColor: color.onSurface,
-              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -119,11 +112,10 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.primaryFixed,
               itemLabel: 'School Fees',
-              savingsProgressIndicator: '\$10,000 of \$20,000',
+              savingsProgressIndicator: '₵10,000 of ₵20,000',
               percentageProgressIndicator: 0.9,
-              daysLeft: "30 days left",
+              //daysLeft: "30 days left",
               cardTextColor: color.onSurface,
-              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -131,12 +123,21 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.primary,
               itemLabel: 'Capital',
-              savingsProgressIndicator: '\$65,000 of \$30,500',
+              savingsProgressIndicator: '₵65,000 of ₵30,500',
               percentageProgressIndicator: 0.9,
-              daysLeft: "60 days left",
+              //daysLeft: "60 days left",
               cardTextColor: color.onSurface,
-              user: widget.user,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            SetTimeSavingsGoalCard(
+                cardColor: color.secondary,
+                months: 3,
+                savingsProgressIndicator: '₵600',
+                percentageProgressIndicator: 0.4,
+                daysLeft: '60 days left',
+                cardTextColor: color.onSurface),
           ],
         ),
       ),
@@ -151,18 +152,16 @@ class SavingGoalCard extends StatelessWidget {
     required this.itemLabel,
     required this.savingsProgressIndicator,
     required this.percentageProgressIndicator,
-    required this.daysLeft,
+    //required this.daysLeft,
     required this.cardTextColor,
-    required this.user,
   });
 
   final Color cardColor;
   final String itemLabel;
   final String savingsProgressIndicator;
   final double percentageProgressIndicator;
-  final String daysLeft;
+  //final String daysLeft;
   final Color cardTextColor;
-  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -238,6 +237,154 @@ class SavingGoalCard extends StatelessWidget {
                           color: cardTextColor,
                         ),
                       ),
+                      // Text(
+                      //   daysLeft,
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //     fontWeight: FontWeight.w200,
+                      //     color: cardTextColor,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  Container(
+                    margin: const EdgeInsetsDirectional.only(end: 30),
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.0),
+                            ),
+                          ),
+                          builder: (context) {
+                            return const AddSavingsBottomSheet();
+                          },
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: color.surface,
+                        radius: 16,
+                        child: const Center(
+                          child: Icon(
+                            Icons.add,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Icon(
+                  Icons.assured_workload_rounded,
+                  color: color.onSurface.withOpacity(0.15),
+                  size: 120,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SetTimeSavingsGoalCard extends StatelessWidget {
+  const SetTimeSavingsGoalCard({
+    super.key,
+    required this.cardColor,
+    required this.months,
+    required this.savingsProgressIndicator,
+    required this.percentageProgressIndicator,
+    required this.daysLeft,
+    required this.cardTextColor,
+  });
+
+  final Color cardColor;
+  final int months;
+  final String savingsProgressIndicator;
+  final double percentageProgressIndicator;
+  final String daysLeft;
+  final Color cardTextColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme color = Theme.of(context).colorScheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+          height: 176,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Set Time ($months months)',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: color.surface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Balance",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: color.surface,
+                        ),
+                      ),
+                      Text(
+                        "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: cardTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  LinearProgressIndicator(
+                    value: percentageProgressIndicator,
+                    backgroundColor: color.surface.withOpacity(0.7),
+                    minHeight: 5,
+                    color: color.onSurface,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        savingsProgressIndicator,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: cardTextColor,
+                        ),
+                      ),
                       Text(
                         daysLeft,
                         style: TextStyle(
@@ -265,9 +412,7 @@ class SavingGoalCard extends StatelessWidget {
                             ),
                           ),
                           builder: (context) {
-                            return AddSavingsBottomSheet(
-                              user: user,
-                            );
+                            return const AddSavingsBottomSheet();
                           },
                         );
                       },
@@ -302,9 +447,7 @@ class SavingGoalCard extends StatelessWidget {
 }
 
 class AddSavingsBottomSheet extends StatefulWidget {
-  const AddSavingsBottomSheet({super.key, required this.user});
-
-  final User user;
+  const AddSavingsBottomSheet({super.key});
 
   @override
   State<AddSavingsBottomSheet> createState() => _AddSavingsBottomSheetState();
@@ -347,27 +490,13 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
             // Updated Button Design
             ElevatedButton(
               style: ButtonStyle(
-                shape: WidgetStateProperty.all(const StadiumBorder()),
-                backgroundColor: WidgetStateProperty.all(color.primary),
+                shape: MaterialStateProperty.all(const StadiumBorder()),
+                backgroundColor: MaterialStateProperty.all(color.primary),
               ),
-              onPressed: () async {
-                double amount = double.parse(_amountController.text);
-
-                t.Transaction transaction = t.Transaction(
-                  id: const Uuid().v4(),
-                  uid: widget.user.uid,
-                  goalId: 'goalId',
-                  amount: amount,
-                  date: DateTime.now(),
-                  isDebit: true,
-                );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) {
-                    return PaymentWebView(transaction: transaction);
-                  }),
-                );
+              onPressed: () {
+                // TODO: Implement saving logic here
+                // You can access the entered amount using _amountController.text
+                Navigator.pop(context); // Close the bottom sheet
               },
               child: Text(
                 'Save',
