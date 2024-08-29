@@ -90,9 +90,9 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.secondary,
               itemLabel: 'Iphone 13 Mini',
-              savingsProgressIndicator: '\$300 of \$699',
+              savingsProgressIndicator: '₵300 of ₵699',
               percentageProgressIndicator: 0.5,
-              daysLeft: "14 days left",
+              //daysLeft: "14 days left",
               cardTextColor: color.surface,
             ),
             const SizedBox(
@@ -101,9 +101,9 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.secondaryFixed,
               itemLabel: "Macbook Pro M1",
-              savingsProgressIndicator: "\$300 of \$1,499",
+              savingsProgressIndicator: "₵300 of ₵1,499",
               percentageProgressIndicator: 0.3,
-              daysLeft: "14 days left",
+              //daysLeft: "14 days left",
               cardTextColor: color.onSurface,
             ),
             const SizedBox(
@@ -112,9 +112,9 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.primaryFixed,
               itemLabel: 'School Fees',
-              savingsProgressIndicator: '\$10,000 of \$20,000',
+              savingsProgressIndicator: '₵10,000 of ₵20,000',
               percentageProgressIndicator: 0.9,
-              daysLeft: "30 days left",
+              //daysLeft: "30 days left",
               cardTextColor: color.onSurface,
             ),
             const SizedBox(
@@ -123,11 +123,21 @@ class _SavingsState extends State<Savings> {
             SavingGoalCard(
               cardColor: color.primary,
               itemLabel: 'Capital',
-              savingsProgressIndicator: '\$65,000 of \$30,500',
+              savingsProgressIndicator: '₵65,000 of ₵30,500',
               percentageProgressIndicator: 0.9,
-              daysLeft: "60 days left",
+              //daysLeft: "60 days left",
               cardTextColor: color.onSurface,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            SetTimeSavingsGoalCard(
+                cardColor: color.secondary,
+                months: 3,
+                savingsProgressIndicator: '₵600',
+                percentageProgressIndicator: 0.4,
+                daysLeft: '60 days left',
+                cardTextColor: color.onSurface),
           ],
         ),
       ),
@@ -142,7 +152,7 @@ class SavingGoalCard extends StatelessWidget {
     required this.itemLabel,
     required this.savingsProgressIndicator,
     required this.percentageProgressIndicator,
-    required this.daysLeft,
+    //required this.daysLeft,
     required this.cardTextColor,
   });
 
@@ -150,7 +160,7 @@ class SavingGoalCard extends StatelessWidget {
   final String itemLabel;
   final String savingsProgressIndicator;
   final double percentageProgressIndicator;
-  final String daysLeft;
+  //final String daysLeft;
   final Color cardTextColor;
 
   @override
@@ -216,6 +226,154 @@ class SavingGoalCard extends StatelessWidget {
                   const SizedBox(
                     height: 5,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        savingsProgressIndicator,
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: cardTextColor,
+                        ),
+                      ),
+                      // Text(
+                      //   daysLeft,
+                      //   style: TextStyle(
+                      //     fontSize: 12,
+                      //     fontWeight: FontWeight.w200,
+                      //     color: cardTextColor,
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 7,
+                  ),
+                  Container(
+                    margin: const EdgeInsetsDirectional.only(end: 30),
+                    alignment: Alignment.bottomRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20.0),
+                            ),
+                          ),
+                          builder: (context) {
+                            return const AddSavingsBottomSheet();
+                          },
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: color.surface,
+                        radius: 16,
+                        child: const Center(
+                          child: Icon(
+                            Icons.add,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Icon(
+                  Icons.assured_workload_rounded,
+                  color: color.onSurface.withOpacity(0.15),
+                  size: 120,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SetTimeSavingsGoalCard extends StatelessWidget {
+  const SetTimeSavingsGoalCard({
+    super.key,
+    required this.cardColor,
+    required this.months,
+    required this.savingsProgressIndicator,
+    required this.percentageProgressIndicator,
+    required this.daysLeft,
+    required this.cardTextColor,
+  });
+
+  final Color cardColor;
+  final int months;
+  final String savingsProgressIndicator;
+  final double percentageProgressIndicator;
+  final String daysLeft;
+  final Color cardTextColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final ColorScheme color = Theme.of(context).colorScheme;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+          height: 176,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Set Time ($months months)',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: color.surface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Balance",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: color.surface,
+                        ),
+                      ),
+                      Text(
+                        "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w200,
+                          color: cardTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  LinearProgressIndicator(
+                    value: percentageProgressIndicator,
+                    backgroundColor: color.surface.withOpacity(0.7),
+                    minHeight: 5,
+                    color: color.onSurface,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
