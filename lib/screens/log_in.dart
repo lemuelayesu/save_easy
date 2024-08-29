@@ -144,6 +144,9 @@ class _LoginState extends State<Login> {
                               isPressed = false;
                             });
                           } catch (error) {
+                            setState(() {
+                              isPressed = false;
+                            });
                             log('$error');
                             showCustomSnackbar('Error: $error', context);
                           }
