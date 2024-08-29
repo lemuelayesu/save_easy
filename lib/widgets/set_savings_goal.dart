@@ -1,9 +1,17 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:save_easy/models/savings_goal.dart';
+import 'package:save_easy/models/user.dart';
+import 'package:save_easy/providers/savings_goal_provider.dart';
+import 'package:save_easy/screens/home.dart';
+import 'package:uuid/uuid.dart';
 
 class Savings extends StatefulWidget {
-  const Savings({super.key});
+  const Savings({super.key, required this.user});
+
+  final User user;
 
   @override
   State<Savings> createState() => _SavingsState();
@@ -29,10 +37,12 @@ class _SavingsState extends State<Savings> {
                   ),
                 ),
                 builder: (context) {
-                  return const SizedBox(
+                  return SizedBox(
                     // <-- SizedBox for fixed width
                     width: 300, // Set your desired width
-                    child: SetSavingsGoal(),
+                    child: SetSavingsGoal(
+                      user: widget.user,
+                    ),
                   );
                 },
               );
@@ -46,7 +56,9 @@ class _SavingsState extends State<Savings> {
 
 // Widget for Setting a Savings Goal
 class SetSavingsGoal extends StatefulWidget {
-  const SetSavingsGoal({super.key});
+  const SetSavingsGoal({super.key, required this.user});
+
+  final User user;
 
   @override
   State<SetSavingsGoal> createState() => _SetSavingsGoalState();
@@ -62,6 +74,8 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
+    final SavingsGoalProvider savingsGoalProvider =
+        Provider.of<SavingsGoalProvider>(context, listen: false);
     return Padding(
       // Padding for better visual spacing
       padding: const EdgeInsets.all(16.0),
@@ -116,9 +130,9 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
 
           // Conditional rendering based on active section
           if (_activeSection == 'custom')
-            _buildCustomGoalForm()
+            _buildCustomGoalForm(savingsGoalProvider)
           else if (_activeSection == 'setTime')
-            _buildSetTimeOptions()
+            _buildSetTimeOptions(savingsGoalProvider)
           else
             const SizedBox.shrink(),
         ],
@@ -127,7 +141,7 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
   }
 
   // Widget for SetTime options
-  Widget _buildSetTimeOptions() {
+  Widget _buildSetTimeOptions(SavingsGoalProvider savingsProvider) {
     final ColorScheme color = Theme.of(context).colorScheme;
     return Column(
       children: [
@@ -139,9 +153,24 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () {
-            // Process 3-month SetTime goal
+          onPressed: () async{
+            int months = 3;
+            TimedGoal goal = TimedGoal(
+              uid: widget.user.uid,
+              id: const Uuid().v4(),
+              months: months,
+            );
+            await savingsProvider.saveTimedGoal(goal);
+            // Process 12-month SetTime goal
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
           },
           child: const Text('3 Months'),
         ),
@@ -156,9 +185,24 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () {
-            // Process 6-month SetTime goal
+          onPressed: () async{
+            int months = 6;
+            TimedGoal goal = TimedGoal(
+              uid: widget.user.uid,
+              id: const Uuid().v4(),
+              months: months,
+            );
+            await savingsProvider.saveTimedGoal(goal);
+            // Process 12-month SetTime goal
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
           },
           child: const Text('6 Months'),
         ),
@@ -173,9 +217,24 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () {
+          onPressed: () async {
+            int months = 12;
+            TimedGoal goal = TimedGoal(
+              uid: widget.user.uid,
+              id: const Uuid().v4(),
+              months: months,
+            );
+            await savingsProvider.saveTimedGoal(goal);
             // Process 12-month SetTime goal
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
           },
           child: const Text('12 Months'),
         ),
@@ -184,7 +243,7 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
   }
 
   // Widget for custom goal form
-  Widget _buildCustomGoalForm() {
+  Widget _buildCustomGoalForm(SavingsGoalProvider savingsGoalProvider) {
     final ColorScheme color = Theme.of(context).colorScheme;
     return Column(
       children: [
@@ -206,13 +265,27 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () {
+          onPressed: () async {
             // Get data from custom goal form
             String goalName = _goalNameController.text;
             String amount = _amountController.text;
             // Process custom goal data
-
+            CustomGoal goal = CustomGoal(
+              uid: widget.user.uid,
+              id: const Uuid().v4(),
+              name: _goalNameController.text,
+              amount: double.parse(_amountController.text),
+            );
+            await savingsGoalProvider.saveCustomGoal(goal);
             Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return const Homepage();
+                },
+              ),
+            );
           },
           child: const Text('Create Goal'),
         ),

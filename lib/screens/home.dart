@@ -242,7 +242,9 @@ class Homepage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return const Savings();
+                                  return Savings(
+                                    user: user,
+                                  );
                                 },
                               ),
                             );
@@ -314,7 +316,9 @@ class Homepage extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              return const Savings();
+                              return Savings(
+                                user: user,
+                              );
                             },
                           ),
                         );
