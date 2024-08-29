@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
+import 'package:save_easy/screens/details.dart';
 import 'package:save_easy/screens/profile.dart';
 import 'package:save_easy/screens/savings_page.dart';
 import 'package:save_easy/financial_news.dart';
@@ -76,7 +77,7 @@ class Homepage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              "Good Morning!",
+                              "Hello!",
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -153,7 +154,7 @@ class Homepage extends StatelessWidget {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) {
-                                        return const Savings();
+                                        return const Details();
                                       },
                                     ),
                                   );

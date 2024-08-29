@@ -28,6 +28,7 @@ dependencies:
   webview_flutter: ^4.8.0
   flutter_local_notifications: ^17.2.2
   timezone: ^0.9.4
+  syncfusion_flutter_charts: ^26.2.11
 
 dev_dependencies:
   flutter_test:
