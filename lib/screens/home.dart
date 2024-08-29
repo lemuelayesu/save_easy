@@ -234,9 +234,6 @@ class Homepage extends StatelessWidget {
                       height: 16,
                     ),
                     Stack(
-                      //for this button
-                      //Big plus sign to save
-                      //After clicking on there, users can pick a plan or create a new one and upload money to it.
                       children: [
                         GestureDetector(
                           onTap: () {
