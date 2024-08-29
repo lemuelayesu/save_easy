@@ -153,7 +153,7 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () async{
+          onPressed: () async {
             int months = 3;
             TimedGoal goal = TimedGoal(
               uid: widget.user.uid,
@@ -185,7 +185,7 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               const StadiumBorder(),
             ),
           ),
-          onPressed: () async{
+          onPressed: () async {
             int months = 6;
             TimedGoal goal = TimedGoal(
               uid: widget.user.uid,

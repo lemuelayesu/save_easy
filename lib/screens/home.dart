@@ -242,9 +242,7 @@ class Homepage extends StatelessWidget {
                               context,
                               MaterialPageRoute(
                                 builder: (context) {
-                                  return Savings(
-                                    user: user,
-                                  );
+                                  return Savings(user: user);
                                 },
                               ),
                             );
