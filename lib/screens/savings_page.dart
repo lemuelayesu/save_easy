@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:save_easy/models/transaction.dart' as t;
+import 'package:save_easy/models/user.dart';
 import 'package:save_easy/screens/home.dart';
+import 'package:save_easy/screens/payment_webview.dart';
 import 'package:save_easy/widgets/set_savings_goal.dart';
+import 'package:uuid/uuid.dart';
 
 class Savings extends StatefulWidget {
-  const Savings({super.key});
+  const Savings({super.key, required this.user});
+
+  final User user;
 
   @override
   State<Savings> createState() => _SavingsState();
@@ -56,7 +62,9 @@ class _SavingsState extends State<Savings> {
                   ),
                 ),
                 builder: (context) {
-                  return const SetSavingsGoal();
+                  return SetSavingsGoal(
+                    user: widget.user,
+                  );
                 },
               );
             },
@@ -91,6 +99,7 @@ class _SavingsState extends State<Savings> {
               percentageProgressIndicator: 0.5,
               daysLeft: "14 days left",
               cardTextColor: color.surface,
+              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -102,6 +111,7 @@ class _SavingsState extends State<Savings> {
               percentageProgressIndicator: 0.3,
               daysLeft: "14 days left",
               cardTextColor: color.onSurface,
+              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -113,6 +123,7 @@ class _SavingsState extends State<Savings> {
               percentageProgressIndicator: 0.9,
               daysLeft: "30 days left",
               cardTextColor: color.onSurface,
+              user: widget.user,
             ),
             const SizedBox(
               height: 10,
@@ -124,6 +135,7 @@ class _SavingsState extends State<Savings> {
               percentageProgressIndicator: 0.9,
               daysLeft: "60 days left",
               cardTextColor: color.onSurface,
+              user: widget.user,
             ),
           ],
         ),
@@ -141,6 +153,7 @@ class SavingGoalCard extends StatelessWidget {
     required this.percentageProgressIndicator,
     required this.daysLeft,
     required this.cardTextColor,
+    required this.user,
   });
 
   final Color cardColor;
@@ -149,6 +162,7 @@ class SavingGoalCard extends StatelessWidget {
   final double percentageProgressIndicator;
   final String daysLeft;
   final Color cardTextColor;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -251,7 +265,9 @@ class SavingGoalCard extends StatelessWidget {
                             ),
                           ),
                           builder: (context) {
-                            return const AddSavingsBottomSheet();
+                            return AddSavingsBottomSheet(
+                              user: user,
+                            );
                           },
                         );
                       },
@@ -286,7 +302,9 @@ class SavingGoalCard extends StatelessWidget {
 }
 
 class AddSavingsBottomSheet extends StatefulWidget {
-  const AddSavingsBottomSheet({super.key});
+  const AddSavingsBottomSheet({super.key, required this.user});
+
+  final User user;
 
   @override
   State<AddSavingsBottomSheet> createState() => _AddSavingsBottomSheetState();
@@ -329,13 +347,27 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
             // Updated Button Design
             ElevatedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all(const StadiumBorder()),
-                backgroundColor: MaterialStateProperty.all(color.primary),
+                shape: WidgetStateProperty.all(const StadiumBorder()),
+                backgroundColor: WidgetStateProperty.all(color.primary),
               ),
-              onPressed: () {
-                // TODO: Implement saving logic here
-                // You can access the entered amount using _amountController.text
-                Navigator.pop(context); // Close the bottom sheet
+              onPressed: () async {
+                double amount = double.parse(_amountController.text);
+
+                t.Transaction transaction = t.Transaction(
+                  id: const Uuid().v4(),
+                  uid: widget.user.uid,
+                  goalId: 'goalId',
+                  amount: amount,
+                  date: DateTime.now(),
+                  isDebit: true,
+                );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return PaymentWebView(transaction: transaction);
+                  }),
+                );
               },
               child: Text(
                 'Save',
