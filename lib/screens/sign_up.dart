@@ -264,6 +264,9 @@ class _SignupState extends State<Signup> {
                                 isPressed = false;
                               });
                             } catch (error) {
+                              setState(() {
+                                isPressed = false;
+                              });
                               log('$error');
                               showCustomSnackbar('Error: $error', context);
                             }

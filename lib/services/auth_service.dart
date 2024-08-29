@@ -15,6 +15,16 @@ class AuthService {
         email: email,
         password: password,
       );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        throw 'User not found';
+      } else if (e.code == 'wrong-password') {
+        throw 'Wrong password';
+      } else if (e.code == 'invalid-credential') {
+        throw 'Incorrect credentials. Check your email and password';
+      } else {
+        throw e.code;
+      }
     } catch (error) {
       rethrow;
     }
@@ -33,16 +43,27 @@ class AuthService {
         password: password,
       );
       await userProvider.saveUserDetails(user);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        throw 'Password must contain at least one uppercase, lowercase, number, and symbol';
+      } else if (e.code == 'invalid-password') {
+        throw 'Password is invalid';
+      } else if (e.code == 'email-already-in-use') {
+        throw 'Email belongs to another user. Sign up with a new email.';
+      } else if (e.code == 'invalid-credential') {
+        throw 'Incorrect credentials. Check your email and password.';
+      } else {
+        throw e.code;
+      }
     } catch (error) {
       rethrow;
     }
   }
 
-  static Future<void> signOut(BuildContext context) async{
-    try{
+  static Future<void> signOut(BuildContext context) async {
+    try {
       await FirebaseAuth.instance.signOut();
-    }
-    catch(error){
+    } catch (error) {
       rethrow;
     }
   }
