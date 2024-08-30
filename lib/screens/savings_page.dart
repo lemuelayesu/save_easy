@@ -1,7 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
+import 'package:save_easy/providers/savings_goal_provider.dart';
 import 'package:save_easy/screens/home.dart';
 import 'package:save_easy/widgets/set_savings_goal.dart';
+
+import '../models/savings_goal.dart';
 
 class Savings extends StatefulWidget {
   const Savings({super.key, required this.user});
@@ -14,6 +21,8 @@ class _SavingsState extends State<Savings> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
+    final SavingsGoalProvider savingsGoalProvider =
+        Provider.of<SavingsGoalProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -87,57 +96,51 @@ class _SavingsState extends State<Savings> {
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
         child: ListView(
           children: [
-            SavingGoalCard(
-              cardColor: color.secondary,
-              itemLabel: 'Iphone 13 Mini',
-              savingsProgressIndicator: '₵300 of ₵699',
-              percentageProgressIndicator: 0.5,
-              //daysLeft: "14 days left",
-              cardTextColor: color.surface,
+            Text('Custom Goals'),
+            FutureBuilder(
+              future: savingsGoalProvider.fetchCustomGoals(widget.user.uid),
+              builder: (context, snapshots) {
+                if (snapshots.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshots.hasError) {
+                  showCustomSnackbar('Error: ${snapshots.error}', context);
+                  log('Error: ${snapshots.error}');
+                  return const SizedBox();
+                } else if (snapshots.hasData) {
+                  final List<CustomGoal> customGoals = snapshots.data ?? [];
+
+                  return customGoals.isEmpty
+                  ? const SizedBox()
+                  : SizedBox(
+                    height: 400,
+                    child: ListView.builder(
+                      itemCount: customGoals.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        CustomGoal goal = customGoals[index];
+                        double current = goal.current;
+                        double target = goal.amount;
+                        double progress = current / target;
+                        double percentage = progress * 100;
+                        return SavingGoalCard(
+                          cardColor: Colors.blue,
+                          itemLabel: goal.name,
+                          savingsProgressIndicator: progress.toString(),
+                          percentageProgressIndicator:
+                              percentage.ceilToDouble(),
+                          cardTextColor: Colors.white,
+                        );
+                      },
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            SavingGoalCard(
-              cardColor: color.secondaryFixed,
-              itemLabel: "Macbook Pro M1",
-              savingsProgressIndicator: "₵300 of ₵1,499",
-              percentageProgressIndicator: 0.3,
-              //daysLeft: "14 days left",
-              cardTextColor: color.onSurface,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SavingGoalCard(
-              cardColor: color.primaryFixed,
-              itemLabel: 'School Fees',
-              savingsProgressIndicator: '₵10,000 of ₵20,000',
-              percentageProgressIndicator: 0.9,
-              //daysLeft: "30 days left",
-              cardTextColor: color.onSurface,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SavingGoalCard(
-              cardColor: color.primary,
-              itemLabel: 'Capital',
-              savingsProgressIndicator: '₵65,000 of ₵30,500',
-              percentageProgressIndicator: 0.9,
-              //daysLeft: "60 days left",
-              cardTextColor: color.onSurface,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            SetTimeSavingsGoalCard(
-                cardColor: color.secondary,
-                months: 3,
-                savingsProgressIndicator: '₵600',
-                percentageProgressIndicator: 0.4,
-                daysLeft: '60 days left',
-                cardTextColor: color.onSurface),
+            Text('Timed Goals'),
           ],
         ),
       ),
@@ -166,134 +169,137 @@ class SavingGoalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
-          height: 176,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    itemLabel,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: color.surface,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Balance",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+            height: 176,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      itemLabel,
+                      style: TextStyle(
+                          fontSize: 18,
                           color: color.surface,
-                        ),
-                      ),
-                      Text(
-                        "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: cardTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  LinearProgressIndicator(
-                    value: percentageProgressIndicator,
-                    backgroundColor: color.surface.withOpacity(0.7),
-                    minHeight: 5,
-                    color: color.onSurface,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        savingsProgressIndicator,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: cardTextColor,
-                        ),
-                      ),
-                      // Text(
-                      //   daysLeft,
-                      //   style: TextStyle(
-                      //     fontSize: 12,
-                      //     fontWeight: FontWeight.w200,
-                      //     color: cardTextColor,
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  Container(
-                    margin: const EdgeInsetsDirectional.only(end: 30),
-                    alignment: Alignment.bottomRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20.0),
-                            ),
+                          fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Balance",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: color.surface,
                           ),
-                          builder: (context) {
-                            return const AddSavingsBottomSheet();
-                          },
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: color.surface,
-                        radius: 16,
-                        child: const Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 20,
+                        ),
+                        Text(
+                          "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: cardTextColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    LinearProgressIndicator(
+                      value: percentageProgressIndicator,
+                      backgroundColor: color.surface.withOpacity(0.7),
+                      minHeight: 5,
+                      color: color.onSurface,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          savingsProgressIndicator,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: cardTextColor,
+                          ),
+                        ),
+                        // Text(
+                        //   daysLeft,
+                        //   style: TextStyle(
+                        //     fontSize: 12,
+                        //     fontWeight: FontWeight.w200,
+                        //     color: cardTextColor,
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    Container(
+                      margin: const EdgeInsetsDirectional.only(end: 30),
+                      alignment: Alignment.bottomRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20.0),
+                              ),
+                            ),
+                            builder: (context) {
+                              return const AddSavingsBottomSheet();
+                            },
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: color.surface,
+                          radius: 16,
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 20,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Icon(
-                  Icons.assured_workload_rounded,
-                  color: color.onSurface.withOpacity(0.15),
-                  size: 120,
+                  ],
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    Icons.assured_workload_rounded,
+                    color: color.onSurface.withOpacity(0.15),
+                    size: 120,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

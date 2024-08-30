@@ -5,12 +5,14 @@ class CustomGoal with ChangeNotifier {
   final String id;
   final String name;
   final double amount;
+  final double current;
 
   CustomGoal({
     required this.uid,
     required this.id,
     required this.name,
     required this.amount,
+    required this.current,
   });
 }
 
