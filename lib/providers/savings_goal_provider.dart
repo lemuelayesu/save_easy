@@ -60,6 +60,8 @@ class SavingsGoalProvider with ChangeNotifier {
         'uid': timedGoal.uid,
         'id': timedGoal.id,
         'months': timedGoal.months,
+        'startDate': timedGoal.startDate,
+        'current': timedGoal.current
       });
       notifyListeners();
     } catch (error) {
@@ -84,6 +86,8 @@ class SavingsGoalProvider with ChangeNotifier {
           uid: doc['uid'] as String,
           id: doc['id'] as String,
           months: doc['months'] as int,
+          startDate: (doc['startDate'] as Timestamp).toDate(),
+          current: doc['current'] as double,
         );
         timedGoals.add(goal);
         notifyListeners();

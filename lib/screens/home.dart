@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/user.dart';
+import 'package:save_easy/providers/transaction_provider.dart';
 import 'package:save_easy/screens/details.dart';
 import 'package:save_easy/screens/profile.dart';
 import 'package:save_easy/screens/savings_page.dart';
@@ -19,6 +22,8 @@ class Homepage extends StatelessWidget {
     final ColorScheme color = Theme.of(context).colorScheme;
     final UserProvider userProvider =
         Provider.of<UserProvider>(context, listen: false);
+    final TransactionProvider transactionProvider =
+        Provider.of<TransactionProvider>(context, listen: false);
     return Scaffold(
         body: FutureBuilder(
       future: userProvider.fetchUserDetails(firebaseEmail),
@@ -109,90 +114,112 @@ class Homepage extends StatelessWidget {
                     Stack(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 13, vertical: 16),
-                          width: double.infinity,
-                          height: 138,
-                          decoration: BoxDecoration(
-                            color: const Color.fromRGBO(36, 36, 36, 20),
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.9),
-                                spreadRadius: 1,
-                                blurRadius: 2,
-                                offset: const Offset(
-                                    0, 1), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Total savings',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w300,
-                                  color: color.surface,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 13, vertical: 16),
+                            width: double.infinity,
+                            height: 138,
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(36, 36, 36, 20),
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.9),
+                                  spreadRadius: 1,
+                                  blurRadius: 2,
+                                  offset: const Offset(
+                                      0, 1), // changes position of shadow
                                 ),
-                              ),
-                              Text(
-                                "₵25,000.40",
-                                style: TextStyle(
-                                  fontSize: 32,
-                                  fontWeight: FontWeight.bold,
-                                  color: color.surface,
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return const Details();
-                                      },
-                                    ),
+                              ],
+                            ),
+                            child: FutureBuilder(
+                              future: transactionProvider
+                                  .getTotalTransactionAmount(user),
+                              builder: (context, snapshots) {
+                                if (snapshots.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
                                   );
-                                },
-                                child: SizedBox(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                } else if (snapshots.hasData) {
+                                  double amount = snapshots.data ?? 0;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Details',
+                                        'Total savings',
                                         style: TextStyle(
-                                          fontSize: 13,
+                                          fontSize: 14,
                                           fontWeight: FontWeight.w300,
                                           color: color.surface,
                                         ),
                                       ),
+                                      Text(
+                                        "GH₵ ${formatAmount(amount)}",
+                                        style: TextStyle(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                          color: color.surface,
+                                        ),
+                                      ),
                                       const SizedBox(
-                                        width: 6,
+                                        height: 5,
                                       ),
                                       GestureDetector(
-                                        child: CircleAvatar(
-                                          backgroundColor: color.surface,
-                                          radius: 16,
-                                          child: const Center(
-                                            child: Icon(
-                                              Icons.arrow_forward_outlined,
-                                              size: 20,
+                                        onTap: () {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return const Details();
+                                              },
                                             ),
+                                          );
+                                        },
+                                        child: SizedBox(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                'Details',
+                                                style: TextStyle(
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w300,
+                                                  color: color.surface,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 6,
+                                              ),
+                                              GestureDetector(
+                                                child: CircleAvatar(
+                                                  backgroundColor:
+                                                      color.surface,
+                                                  radius: 16,
+                                                  child: const Center(
+                                                    child: Icon(
+                                                      Icons
+                                                          .arrow_forward_outlined,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                                  );
+                                } else if (snapshots.hasError) {
+                                  log('Error: ${snapshots.error}');
+                                  return const SizedBox();
+                                } else {
+                                  return const SizedBox();
+                                }
+                              },
+                            )),
                         Align(
                           //top right
                           alignment: Alignment.topRight,

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:save_easy/consts/theme.dart';
 import 'package:save_easy/providers/savings_goal_provider.dart';
+import 'package:save_easy/providers/transaction_provider.dart';
 import 'package:save_easy/providers/user_provider.dart';
 import 'package:save_easy/screens/onboarding.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,6 +40,9 @@ class _MyAppState extends State<MyApp> {
         ),
         ChangeNotifierProvider(
           create: (context) => SavingsGoalProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => TransactionProvider(),
         ),
       ],
       child: MaterialApp(

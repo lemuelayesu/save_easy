@@ -34,7 +34,7 @@ class _SavingSectionState extends State<SavingSection> {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 2,
-            offset: const Offset(0, 1), // changes position of shadow
+            offset: const Offset(0, 1),
           ),
         ],
       ),

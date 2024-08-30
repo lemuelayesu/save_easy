@@ -2,11 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
+import 'package:save_easy/models/transaction.dart';
 import 'package:save_easy/models/user.dart';
 import 'package:save_easy/providers/savings_goal_provider.dart';
 import 'package:save_easy/screens/home.dart';
+import 'package:save_easy/screens/payment_webview.dart';
 import 'package:save_easy/widgets/set_savings_goal.dart';
+import 'package:uuid/uuid.dart';
 import '../models/savings_goal.dart';
 
 class Savings extends StatefulWidget {
@@ -126,10 +130,12 @@ class _SavingsState extends State<Savings> {
                               return SavingGoalCard(
                                 cardColor: Colors.blue,
                                 itemLabel: goal.name,
-                                savingsProgressIndicator: progress.toString(),
+                                currentAmount: goal.current,
                                 percentageProgressIndicator:
                                     percentage.ceilToDouble(),
                                 cardTextColor: Colors.white,
+                                uid: widget.user.uid,
+                                goalId: goal.id,
                               );
                             },
                           ),
@@ -164,17 +170,28 @@ class _SavingsState extends State<Savings> {
                               TimedGoal goal = timedGoals[index];
                               //supposed to calculate the days that pass after
                               //and give the days left
-                              int month = goal.months;
-                              int daysleft = month * 31;
-                              double progress = daysleft.toDouble();
+                              int months = goal.months;
+                              DateTime startDate = goal.startDate;
+                              int totalDays = months * 31;
+                              int daysPassed =
+                                  DateTime.now().difference(startDate).inDays;
+                              int daysLeft = totalDays - daysPassed;
+                              if (daysLeft < 0) {
+                                daysLeft = 0;
+                              }
+                              double progress =
+                                  (totalDays - daysLeft).toDouble() / totalDays;
                               double percentage = progress * 100;
+
                               return SetTimeSavingsGoalCard(
                                 cardColor: color.secondary,
                                 cardTextColor: Colors.white,
                                 months: goal.months,
-                                daysLeft: daysleft.toString(),
-                                savingsProgressIndicator: progress.toString(),
+                                daysLeft: daysLeft.toString(),
+                                currentAmount: goal.current,
                                 percentageProgressIndicator: percentage,
+                                uid: widget.user.uid,
+                                goalId: goal.id,
                               );
                             },
                           ),
@@ -196,16 +213,20 @@ class SavingGoalCard extends StatelessWidget {
     super.key,
     required this.cardColor,
     required this.itemLabel,
-    required this.savingsProgressIndicator,
+    required this.currentAmount,
     required this.percentageProgressIndicator,
     required this.cardTextColor,
+    required this.uid,
+    required this.goalId,
   });
 
   final Color cardColor;
   final String itemLabel;
-  final String savingsProgressIndicator;
+  final double currentAmount;
   final double percentageProgressIndicator;
   final Color cardTextColor;
+  final String uid;
+  final String goalId;
 
   @override
   Widget build(BuildContext context) {
@@ -250,7 +271,7 @@ class SavingGoalCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
+                          "${percentageProgressIndicator.toStringAsFixed(0)}%",
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w200,
@@ -263,7 +284,7 @@ class SavingGoalCard extends StatelessWidget {
                       height: 5,
                     ),
                     LinearProgressIndicator(
-                      value: percentageProgressIndicator,
+                      value: percentageProgressIndicator / 100,
                       backgroundColor: color.surface.withOpacity(0.7),
                       minHeight: 5,
                       color: color.onSurface,
@@ -276,7 +297,7 @@ class SavingGoalCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          savingsProgressIndicator,
+                          'GHc ${formatAmount(currentAmount)}',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w200,
@@ -302,7 +323,11 @@ class SavingGoalCard extends StatelessWidget {
                               ),
                             ),
                             builder: (context) {
-                              return const AddSavingsBottomSheet();
+                              return AddSavingsBottomSheet(
+                                uid: uid,
+                                goalId: goalId,
+                                savingsType: 'custom',
+                              );
                             },
                           );
                         },
@@ -342,18 +367,22 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
     super.key,
     required this.cardColor,
     required this.months,
-    required this.savingsProgressIndicator,
+    required this.currentAmount,
     required this.percentageProgressIndicator,
     required this.daysLeft,
     required this.cardTextColor,
+    required this.uid,
+    required this.goalId,
   });
 
   final Color cardColor;
   final int months;
-  final String savingsProgressIndicator;
+  final double currentAmount;
   final double percentageProgressIndicator;
   final String daysLeft;
   final Color cardTextColor;
+  final String uid;
+  final String goalId;
 
   @override
   Widget build(BuildContext context) {
@@ -417,7 +446,7 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        savingsProgressIndicator,
+                        'GHc ${formatAmount(currentAmount)}',
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w200,
@@ -451,7 +480,11 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                             ),
                           ),
                           builder: (context) {
-                            return const AddSavingsBottomSheet();
+                            return AddSavingsBottomSheet(
+                              uid: uid,
+                              goalId: goalId,
+                              savingsType: 'timed',
+                            );
                           },
                         );
                       },
@@ -486,7 +519,15 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
 }
 
 class AddSavingsBottomSheet extends StatefulWidget {
-  const AddSavingsBottomSheet({super.key});
+  const AddSavingsBottomSheet(
+      {super.key,
+      required this.uid,
+      required this.goalId,
+      required this.savingsType});
+
+  final String uid;
+  final String goalId;
+  final String savingsType;
 
   @override
   State<AddSavingsBottomSheet> createState() => _AddSavingsBottomSheetState();
@@ -532,8 +573,26 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
                 backgroundColor: WidgetStateProperty.all(color.primary),
               ),
               onPressed: () {
-                // You can access the entered amount using _amountController.text
-                Navigator.pop(context); // Close the bottom sheet
+                //take amount
+                double amount = double.parse(_amountController.text);
+                Transaction transaction = Transaction(
+                    id: const Uuid().v4(),
+                    uid: widget.uid,
+                    goalId: widget.goalId,
+                    amount: amount,
+                    date: DateTime.now(),
+                    isDebit: true);
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return PaymentWebView(
+                      transaction: transaction,
+                      currentAmount: transaction.amount,
+                      savingsType: widget.savingsType,
+                    );
+                  }),
+                );
               },
               child: Text(
                 'Save',

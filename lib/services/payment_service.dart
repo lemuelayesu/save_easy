@@ -56,7 +56,7 @@ class PaystackService {
     }
   }
 
-  Future<dynamic> verifyTransaction(
+  Future<bool> verifyTransaction(
       Transaction transaction, BuildContext context) async {
     try {
       String reference = '${transaction.date.microsecondsSinceEpoch}';
@@ -69,15 +69,19 @@ class PaystackService {
         },
       );
       final resData = jsonDecode(res.body);
-      log(resData);
-      if (resData['data']["status"] == "success") {
-        return true;
+      log(resData.toString());
+      if (resData['status'] == true &&
+          resData['data'] is Map<String, dynamic>) {
+        if (resData['data']['status'] == "success") {
+          return true;
+        }
       }
       showCustomSnackbar(
           "Complete Transaction before tapping this button", context);
-      return '';
+      return false;
     } catch (e) {
       showCustomSnackbar("Error verifying Transaction: $e", context);
+      return false;
     }
   }
 }

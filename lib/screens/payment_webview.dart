@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:save_easy/screens/home.dart';
+import 'package:save_easy/screens/savings_page.dart';
 import 'package:uuid/uuid.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:intl/intl.dart';
@@ -12,9 +14,15 @@ import '../services/notification_service.dart';
 import '../services/payment_service.dart';
 
 class PaymentWebView extends StatefulWidget {
-  const PaymentWebView({super.key, required this.transaction});
+  const PaymentWebView(
+      {super.key,
+      required this.transaction,
+      required this.savingsType,
+      required this.currentAmount});
 
   final Transaction transaction;
+  final String savingsType;
+  final double currentAmount;
 
   @override
   State<PaymentWebView> createState() => _PaymentWebViewState();
@@ -58,14 +66,14 @@ class _PaymentWebViewState extends State<PaymentWebView> {
           },
           icon: Icon(
             Icons.arrow_back_ios,
-            color: color.onPrimary,
+            color: color.onSurface,
             size: 20,
           ),
         ),
         title: Text(
           'Complete Payment',
           style: TextStyle(
-            color: color.onPrimary,
+            color: color.onSurface,
             fontSize: 18,
           ),
         ),
@@ -106,25 +114,47 @@ class _PaymentWebViewState extends State<PaymentWebView> {
       ),
       bottomSheet: GestureDetector(
         onTap: () async {
-          if (await PaystackService()
-              .verifyTransaction(widget.transaction, context)) {
+          bool isVerified = await PaystackService()
+              .verifyTransaction(widget.transaction, context);
+          if (isVerified == true) {
             transactionProvider.saveTransaction(widget.transaction);
             n.Notification notification = n.Notification(
               title: 'Transaction completed',
               body:
-                  'Your payment of GHc ${formatAmount(widget.transaction.amount)} to SaveEasy has been competed.',
+                  'Your payment of GHc ${formatAmount(widget.transaction.amount)} to SaveEasy has been completed.',
               date: widget.transaction.date,
               uid: widget.transaction.uid,
               id: const Uuid().v4(),
             );
             await NotificationService.showInstantNotification(notification);
+            if (widget.savingsType == 'custom') {
+              await transactionProvider.updateCustomAmount(
+                  widget.transaction.goalId,
+                  widget.currentAmount,
+                  widget.transaction.amount);
+            } else {
+              await transactionProvider.updateTimedAmount(
+                  widget.transaction.goalId,
+                  widget.currentAmount,
+                  widget.transaction.amount);
+            }
             showCustomSnackbar(
               'Transaction completed successfully',
               context,
             );
-          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return Homepage();
+                },
+              ),
+            );
+          } else if (isVerified == false) {
             showCustomSnackbar('Transaction could not be verified', context);
-            Navigator.pop(context);
+          } else {
+            showCustomSnackbar(
+                'An error occurred during transaction verification', context);
           }
         },
         child: Container(

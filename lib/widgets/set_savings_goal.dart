@@ -159,6 +159,8 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               uid: widget.user.uid,
               id: const Uuid().v4(),
               months: months,
+              startDate: DateTime.now(),
+              current: 0.0,
             );
             await savingsProvider.saveTimedGoal(goal);
             // Process 12-month SetTime goal
@@ -191,6 +193,8 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               uid: widget.user.uid,
               id: const Uuid().v4(),
               months: months,
+              startDate: DateTime.now(),
+              current: 0.0,
             );
             await savingsProvider.saveTimedGoal(goal);
             // Process 12-month SetTime goal
@@ -223,6 +227,8 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               uid: widget.user.uid,
               id: const Uuid().v4(),
               months: months,
+              startDate: DateTime.now(),
+              current: 0.0,
             );
             await savingsProvider.saveTimedGoal(goal);
             // Process 12-month SetTime goal

@@ -10,20 +10,20 @@ import '../models/user.dart';
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   static Future<void> onDidReceiveNotificationResponse(
       NotificationResponse notificationResponse) async {}
 
   static Future<void> init() async {
     const AndroidInitializationSettings androidInitializationSettings =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings iosInitializationSettings =
-    DarwinInitializationSettings();
+        DarwinInitializationSettings();
 
     const InitializationSettings initializationSettings =
-    InitializationSettings(
+        InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
@@ -32,24 +32,27 @@ class NotificationService {
       initializationSettings,
       onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
       onDidReceiveBackgroundNotificationResponse:
-      onDidReceiveNotificationResponse,
+          onDidReceiveNotificationResponse,
     );
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
   }
 
   static Future<void> showInstantNotification(
       n.Notification notification) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      "channel_Id",
+      'channel_Name',
+      importance: Importance.high,
+      priority: Priority.high,
+      icon: '@mipmap/ic_launcher',
+    );
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: AndroidNotificationDetails(
-        "channel_Id",
-        'channel_Name',
-        importance: Importance.high,
-        priority: Priority.high,
-      ),
+      android: androidPlatformChannelSpecifics,
       iOS: DarwinNotificationDetails(),
     );
     await flutterLocalNotificationsPlugin.show(
@@ -78,7 +81,7 @@ class NotificationService {
       tz.TZDateTime.from(notification.date, tz.local),
       platformChannelSpecifics,
       uiLocalNotificationDateInterpretation:
-      UILocalNotificationDateInterpretation.absoluteTime,
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dateAndTime,
     );
     saveNotification(notification);
