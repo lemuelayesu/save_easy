@@ -7,7 +7,6 @@ import 'package:save_easy/models/user.dart';
 import 'package:save_easy/providers/savings_goal_provider.dart';
 import 'package:save_easy/screens/home.dart';
 import 'package:save_easy/widgets/set_savings_goal.dart';
-
 import '../models/savings_goal.dart';
 
 class Savings extends StatefulWidget {
@@ -112,35 +111,79 @@ class _SavingsState extends State<Savings> {
                   final List<CustomGoal> customGoals = snapshots.data ?? [];
 
                   return customGoals.isEmpty
-                  ? const SizedBox()
-                  : SizedBox(
-                    height: 400,
-                    child: ListView.builder(
-                      itemCount: customGoals.length,
-                      padding: EdgeInsets.zero,
-                      itemBuilder: (context, index) {
-                        CustomGoal goal = customGoals[index];
-                        double current = goal.current;
-                        double target = goal.amount;
-                        double progress = current / target;
-                        double percentage = progress * 100;
-                        return SavingGoalCard(
-                          cardColor: Colors.blue,
-                          itemLabel: goal.name,
-                          savingsProgressIndicator: progress.toString(),
-                          percentageProgressIndicator:
-                              percentage.ceilToDouble(),
-                          cardTextColor: Colors.white,
+                      ? const SizedBox()
+                      : SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: customGoals.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              CustomGoal goal = customGoals[index];
+                              double current = goal.current;
+                              double target = goal.amount;
+                              double progress = current / target;
+                              double percentage = progress * 100;
+                              return SavingGoalCard(
+                                cardColor: Colors.blue,
+                                itemLabel: goal.name,
+                                savingsProgressIndicator: progress.toString(),
+                                percentageProgressIndicator:
+                                    percentage.ceilToDouble(),
+                                cardTextColor: Colors.white,
+                              );
+                            },
+                          ),
                         );
-                      },
-                    ),
-                  );
                 } else {
                   return const SizedBox();
                 }
               },
             ),
-            Text('Timed Goals'),
+            FutureBuilder(
+              future: savingsGoalProvider.fetchTimedGoals(widget.user.uid),
+              builder: (context, snapshots) {
+                if (snapshots.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshots.hasError) {
+                  showCustomSnackbar('Error: ${snapshots.error}', context);
+                  log('Error: ${snapshots.error}');
+                  return const SizedBox();
+                } else if (snapshots.hasData) {
+                  final List<TimedGoal> timedGoals = snapshots.data ?? [];
+
+                  return timedGoals.isEmpty
+                      ? const SizedBox()
+                      : SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: timedGoals.length,
+                            padding: EdgeInsets.zero,
+                            itemBuilder: (context, index) {
+                              TimedGoal goal = timedGoals[index];
+                              //supposed to calculate the days that pass after
+                              //and give the days left
+                              int month = goal.months;
+                              int daysleft = month * 31;
+                              double progress = daysleft.toDouble();
+                              double percentage = progress * 100;
+                              return SetTimeSavingsGoalCard(
+                                cardColor: color.secondary,
+                                cardTextColor: Colors.white,
+                                months: goal.months,
+                                daysLeft: daysleft.toString(),
+                                savingsProgressIndicator: progress.toString(),
+                                percentageProgressIndicator: percentage,
+                              );
+                            },
+                          ),
+                        );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -155,7 +198,6 @@ class SavingGoalCard extends StatelessWidget {
     required this.itemLabel,
     required this.savingsProgressIndicator,
     required this.percentageProgressIndicator,
-    //required this.daysLeft,
     required this.cardTextColor,
   });
 
@@ -163,7 +205,6 @@ class SavingGoalCard extends StatelessWidget {
   final String itemLabel;
   final String savingsProgressIndicator;
   final double percentageProgressIndicator;
-  //final String daysLeft;
   final Color cardTextColor;
 
   @override
@@ -201,7 +242,7 @@ class SavingGoalCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Balance",
+                          "Progress",
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w200,
@@ -242,14 +283,6 @@ class SavingGoalCard extends StatelessWidget {
                             color: cardTextColor,
                           ),
                         ),
-                        // Text(
-                        //   daysLeft,
-                        //   style: TextStyle(
-                        //     fontSize: 12,
-                        //     fontWeight: FontWeight.w200,
-                        //     color: cardTextColor,
-                        //   ),
-                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -354,7 +387,7 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Balance",
+                        "Progress",
                         style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w200,
@@ -493,14 +526,12 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
               ),
             ),
             const SizedBox(height: 24),
-            // Updated Button Design
             ElevatedButton(
               style: ButtonStyle(
-                shape: MaterialStateProperty.all(const StadiumBorder()),
-                backgroundColor: MaterialStateProperty.all(color.primary),
+                shape: WidgetStateProperty.all(const StadiumBorder()),
+                backgroundColor: WidgetStateProperty.all(color.primary),
               ),
               onPressed: () {
-                // TODO: Implement saving logic here
                 // You can access the entered amount using _amountController.text
                 Navigator.pop(context); // Close the bottom sheet
               },
@@ -522,7 +553,6 @@ class _AddSavingsBottomSheetState extends State<AddSavingsBottomSheet> {
 
   @override
   void dispose() {
-    // Dispose the controller when the widget is disposed
     _amountController.dispose();
     super.dispose();
   }
