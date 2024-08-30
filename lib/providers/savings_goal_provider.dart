@@ -15,6 +15,7 @@ class SavingsGoalProvider with ChangeNotifier {
         'uid': customGoal.uid,
         'name': customGoal.name,
         'amount': customGoal.amount,
+        'current': customGoal.current,
       });
       notifyListeners();
     } catch (error) {
@@ -39,6 +40,7 @@ class SavingsGoalProvider with ChangeNotifier {
           id: doc['id'] as String,
           name: doc['name'] as String,
           amount: doc['amount'] as double,
+          current: doc['current'] as double,
         );
         customGoals.add(goal);
         notifyListeners();

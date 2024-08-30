@@ -275,6 +275,7 @@ class _SetSavingsGoalState extends State<SetSavingsGoal> {
               id: const Uuid().v4(),
               name: _goalNameController.text,
               amount: double.parse(_amountController.text),
+              current: 0.0,
             );
             await savingsGoalProvider.saveCustomGoal(goal);
             Navigator.pop(context);
