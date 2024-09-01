@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:save_easy/models/user.dart' as u;
 import 'package:save_easy/providers/user_provider.dart';
 
+import '../consts/snackbar.dart';
+
 class AuthService {
   static Future<void> signIn(
     String email,
@@ -64,6 +66,18 @@ class AuthService {
     try {
       await FirebaseAuth.instance.signOut();
     } catch (error) {
+      rethrow;
+    }
+  }
+
+  static Future<void> forgotPassword(String email, BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      showCustomSnackbar(
+        'Check your email to reset your password. The email might be in your spam folder.',
+        context,
+      );
+    } catch (e) {
       rethrow;
     }
   }

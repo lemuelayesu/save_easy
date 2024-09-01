@@ -403,7 +403,7 @@ class Homepage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Financial News',
+                      'Fiancial News',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
