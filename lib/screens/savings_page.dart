@@ -145,6 +145,7 @@ class _SavingsState extends State<Savings> {
                 }
               },
             ),
+            const Text('Set Time Goals'),
             FutureBuilder(
               future: savingsGoalProvider.fetchTimedGoals(widget.user.uid),
               builder: (context, snapshots) {
@@ -390,127 +391,130 @@ class SetTimeSavingsGoalCard extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
-          height: 176,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: cardColor,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Set Time ($months months)',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: color.surface,
-                      fontWeight: FontWeight.w600,
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 16),
+            height: 176,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Set Time ($months months)',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: color.surface,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Progress",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: color.surface,
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Progress",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: color.surface,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: cardTextColor,
+                        Text(
+                          "${(percentageProgressIndicator * 100).toStringAsFixed(0)}%",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: cardTextColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 5),
-                  LinearProgressIndicator(
-                    value: percentageProgressIndicator,
-                    backgroundColor: color.surface.withOpacity(0.7),
-                    minHeight: 5,
-                    color: color.onSurface,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  const SizedBox(height: 5),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'GHc ${formatAmount(currentAmount)}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: cardTextColor,
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    LinearProgressIndicator(
+                      value: percentageProgressIndicator,
+                      backgroundColor: color.surface.withOpacity(0.7),
+                      minHeight: 5,
+                      color: color.onSurface,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(height: 5),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'GHc ${formatAmount(currentAmount)}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: cardTextColor,
+                          ),
                         ),
-                      ),
-                      Text(
-                        daysLeft,
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          color: cardTextColor,
+                        Text(
+                          daysLeft,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            color: cardTextColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 7,
-                  ),
-                  Container(
-                    margin: const EdgeInsetsDirectional.only(end: 30),
-                    alignment: Alignment.bottomRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20.0),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 7,
+                    ),
+                    Container(
+                      margin: const EdgeInsetsDirectional.only(end: 30),
+                      alignment: Alignment.bottomRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20.0),
+                              ),
+                            ),
+                            builder: (context) {
+                              return AddSavingsBottomSheet(
+                                uid: uid,
+                                goalId: goalId,
+                                savingsType: 'timed',
+                              );
+                            },
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: color.surface,
+                          radius: 16,
+                          child: const Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 20,
                             ),
                           ),
-                          builder: (context) {
-                            return AddSavingsBottomSheet(
-                              uid: uid,
-                              goalId: goalId,
-                              savingsType: 'timed',
-                            );
-                          },
-                        );
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: color.surface,
-                        radius: 16,
-                        child: const Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 20,
-                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Icon(
-                  Icons.assured_workload_rounded,
-                  color: color.onSurface.withOpacity(0.15),
-                  size: 120,
+                  ],
                 ),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Icon(
+                    Icons.assured_workload_rounded,
+                    color: color.onSurface.withOpacity(0.15),
+                    size: 120,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

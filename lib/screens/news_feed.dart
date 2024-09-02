@@ -41,7 +41,7 @@ class NewsPage extends StatelessWidget {
                 itemBuilder: (context, index) {
                   Article article = articles[index];
                   return Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(bottom: 0),
                     child: NewsTile(
                       headlineImage: article.imageUrl,
                       headlineText: article.title,

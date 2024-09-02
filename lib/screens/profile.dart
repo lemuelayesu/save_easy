@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:save_easy/screens/log_in.dart';
 import 'home.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide User;
+import 'package:save_easy/models/user.dart';
+
+import '../providers/user_provider.dart'; // Import your UserProvider
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -8,10 +14,17 @@ class UserProfile extends StatefulWidget {
   State<UserProfile> createState() => _UserProfileState();
 }
 
+class AuthService {
+  static Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+  }
+}
+
 class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     final ColorScheme color = Theme.of(context).colorScheme;
+    final User user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -51,11 +64,10 @@ class _UserProfileState extends State<UserProfile> {
               child: Stack(
                 alignment: Alignment.bottomRight,
                 children: [
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 60,
-                    backgroundImage:
-                        AssetImage('assets/illustrations/circleavatar.png'),
-                    backgroundColor: Colors.transparent,
+                    child: Icon(Icons.account_circle_sharp,
+                        size: 100, color: Colors.black),
                   ),
                   CircleAvatar(
                     radius: 16,
@@ -81,7 +93,7 @@ class _UserProfileState extends State<UserProfile> {
             Center(
               // Center the username
               child: Text(
-                'Lemuel Ayesu',
+                user.fullName,
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -120,6 +132,16 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                     onTap: () {
                       //onTap, logout
+                      AuthService.logout();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return const Login();
+                          },
+                        ),
+                      );
+                      const SnackBar(content: Text('Signed-out'));
                     },
                   ),
                 ],
