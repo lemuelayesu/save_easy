@@ -30,7 +30,6 @@ class PaymentWebView extends StatefulWidget {
 
 class _PaymentWebViewState extends State<PaymentWebView> {
   late Future futureInitTransaction;
-  late WebViewController webViewController;
   late final PlatformWebViewControllerCreationParams params;
 
   @override
@@ -39,12 +38,6 @@ class _PaymentWebViewState extends State<PaymentWebView> {
     futureInitTransaction =
         PaystackService().initTransaction(widget.transaction, context);
     params = const PlatformWebViewControllerCreationParams();
-  }
-
-  @override
-  void dispose() {
-    webViewController.clearCache();
-    super.dispose();
   }
 
   String formatAmount(double amount) {

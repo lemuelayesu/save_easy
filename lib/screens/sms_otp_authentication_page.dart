@@ -1,5 +1,8 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'dart:async';
 import 'package:flutter/material.dart';
+// ignore: unused_import
 import 'package:http/http.dart' as http;
 
 class SmsOtpAuthenticationPage extends StatefulWidget {
@@ -9,10 +12,10 @@ class SmsOtpAuthenticationPage extends StatefulWidget {
       verifyOtp; // Function to verify OTP
 
   const SmsOtpAuthenticationPage({
-    Key? key,
+    super.key,
     required this.sendOtp,
     required this.verifyOtp,
-  }) : super(key: key);
+  });
 
   @override
   _SmsOtpAuthenticationPageState createState() =>
@@ -87,7 +90,9 @@ class _SmsOtpAuthenticationPageState extends State<SmsOtpAuthenticationPage> {
         if (isVerified) {
           // OTP verification successful, navigate to the next screen
           Navigator.pushReplacementNamed(
-              context, '/home'); // Replace '/home' with your route
+              // ignore: use_build_context_synchronously
+              context,
+              '/home'); // Replace '/home' with your route
         } else {
           // Handle OTP verification failed (e.g., show a Snackbar)
           print("OTP verification failed");

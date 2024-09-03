@@ -6,7 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:save_easy/consts/consts.dart';
 import 'package:save_easy/consts/snackbar.dart';
 import 'package:save_easy/models/news.dart';
+import 'package:save_easy/models/savings_goal.dart';
 import 'package:save_easy/models/user.dart';
+import 'package:save_easy/providers/savings_goal_provider.dart';
 import 'package:save_easy/providers/transaction_provider.dart';
 import 'package:save_easy/screens/details.dart';
 import 'package:save_easy/screens/news_feed.dart';
@@ -27,6 +29,8 @@ class Homepage extends StatelessWidget {
         Provider.of<UserProvider>(context, listen: false);
     final TransactionProvider transactionProvider =
         Provider.of<TransactionProvider>(context, listen: false);
+    final SavingsGoalProvider savingsGoalProvider =
+        Provider.of<SavingsGoalProvider>(context, listen: false);
     return Scaffold(
       body: FutureBuilder(
         future: userProvider.fetchUserDetails(firebaseEmail),
@@ -72,7 +76,7 @@ class Homepage extends StatelessWidget {
                                 child: SizedBox(
                                   width: 31.56,
                                   height: 32,
-                                  child: Icon(Icons.account_circle_sharp,
+                                  child: Icon(Icons.account_circle,
                                       size: 30, color: Colors.black),
                                 ),
                               ),
@@ -326,78 +330,87 @@ class Homepage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Savings',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: color.onSurface,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return Savings(
-                                  user: user,
-                                );
-                              },
+                  FutureBuilder(
+                    future: savingsGoalProvider.fetchCustomGoals(user.uid),
+                    builder: (context, snapshots) {
+                      if (snapshots.connectionState ==
+                          ConnectionState.waiting) {
+                        return const SizedBox();
+                      } else if (snapshots.hasError) {
+                        log('Error: ${snapshots.error}');
+                        return const SizedBox();
+                      } else if (snapshots.hasData) {
+                        List<CustomGoal> goals = snapshots.data ?? [];
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Savings',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: color.onSurface,
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return Savings(
+                                            user: user,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'See All',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueAccent,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                        child: const Text(
-                          'See All',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    //savings section
-                    children: [
-                      Wrap(
-                        spacing: 15,
-                        runSpacing: 15,
-                        children: [
-                          SavingSection(
-                            progressColor: color.secondary,
-                            itemLable: 'Iphone 13 Mini',
-                            priceLable: '₵699',
-                            progressValue: 0.5,
-                          ),
-                          //const SizedBOx
-                          SavingSection(
-                            itemLable: 'Macbook Pro M1',
-                            priceLable: '₵1,499',
-                            progressValue: 0.6,
-                            progressColor: color.secondaryFixed,
-                          ),
-                          SavingSection(
-                            itemLable: 'Car',
-                            priceLable: '₵20,000',
-                            progressValue: 0.3,
-                            progressColor: color.primaryFixed,
-                          ),
-                          SavingSection(
-                            itemLable: 'House',
-                            priceLable: '₵30,500',
-                            progressValue: 0.55,
-                            progressColor: color.primary,
-                          ),
-                        ],
-                      ),
-                    ],
+                            SizedBox(height: 10),
+                            SizedBox(
+                              height: goals.length >= 2 ? 180 : 90,
+                              child: GridView.builder(
+                                itemCount: goals.length >= 4 ? 4 : goals.length,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 15,
+                                  crossAxisSpacing: 10,
+                                ),
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  CustomGoal goal = goals[index];
+                                  return SavingSection(
+                                    itemLable: goal.name,
+                                    priceLable:
+                                        'GH₵ ${formatAmount(goal.amount)}',
+                                    progressValue: goal.current > 0
+                                        ? goal.current / goal.amount
+                                        : 0.1,
+                                    progressColor: Colors.blue,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
                   ),
                   //News section
                   Row(

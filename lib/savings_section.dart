@@ -51,10 +51,6 @@ class _SavingSectionState extends State<SavingSection> {
                   fontSize: 13,
                 ),
               ),
-              const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 16,
-              ),
             ],
           ),
           const SizedBox(

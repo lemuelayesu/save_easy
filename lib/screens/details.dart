@@ -177,7 +177,7 @@ class _DetailsState extends State<Details> {
                     200, // Set a fixed height or use Expanded for dynamic height
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: color.surfaceVariant,
+                  color: Colors.grey,
                 ),
                 child: ListView.builder(
                   itemCount:
